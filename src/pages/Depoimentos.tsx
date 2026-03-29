@@ -8,7 +8,8 @@ interface Depoimento {
   cidade: string;
   condicao: string;
   condicaoLabel: string;
-  texto: string;
+  frase: string;
+  tempoResultado: string;
   driveId: string;
 }
 
@@ -75,8 +76,11 @@ function VideoCard({ dep }: { dep: Depoimento }) {
         {dep.cidade && dep.cidade !== "Não informado" && (
           <p className="text-xs text-gray-400">{dep.cidade}</p>
         )}
+        {dep.tempoResultado && (
+          <p className="text-xs font-semibold text-[#167D7F]">⏱ {dep.tempoResultado}</p>
+        )}
         <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 flex-1">
-          "{dep.texto.slice(0, 160)}…"
+          "{dep.frase}"
         </p>
       </div>
     </div>
@@ -87,7 +91,7 @@ function DepoimentoCard({ dep }: { dep: Depoimento }) {
   const [playing, setPlaying] = useState(false);
   const [expanded, setExpanded] = useState(false);
   const PREVIEW_LENGTH = 240;
-  const isLong = dep.texto.length > PREVIEW_LENGTH;
+  const isLong = dep.frase.length > PREVIEW_LENGTH;
 
   return (
     <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col">
@@ -131,8 +135,11 @@ function DepoimentoCard({ dep }: { dep: Depoimento }) {
             <Star key={i} size={11} className="fill-amber-400 text-amber-400" />
           ))}
         </div>
+        {dep.tempoResultado && (
+          <p className="text-xs font-semibold text-[#167D7F]">⏱ {dep.tempoResultado}</p>
+        )}
         <p className="text-xs text-gray-600 leading-relaxed">
-          "{expanded || !isLong ? dep.texto : dep.texto.slice(0, PREVIEW_LENGTH) + "…"}"
+          "{expanded || !isLong ? dep.frase : dep.frase.slice(0, PREVIEW_LENGTH) + "…"}"
         </p>
         {isLong && (
           <button
@@ -159,7 +166,7 @@ export default function Depoimentos() {
       const matchSearch =
         !q ||
         d.nome.toLowerCase().includes(q) ||
-        d.texto.toLowerCase().includes(q) ||
+        d.frase.toLowerCase().includes(q) ||
         d.condicaoLabel.toLowerCase().includes(q);
       return matchCat && matchSearch;
     });
