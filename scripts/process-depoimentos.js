@@ -1,8 +1,8 @@
 #!/usr/bin/env node
 /**
  * Script: process-depoimentos.js
- * Lê os 206 arquivos .txt de Depoimentos/depoimentos_renomeados/
- * e gera src/data/depoimentos.json
+ * Lê os arquivos .txt + o Excel com links do Drive
+ * e gera src/data/depoimentos.json com driveId incluído.
  *
  * Uso: node scripts/process-depoimentos.js
  */
@@ -10,12 +10,16 @@
 import { readdirSync, readFileSync, writeFileSync } from "fs";
 import { join, resolve, dirname } from "path";
 import { fileURLToPath } from "url";
+import { createRequire } from "module";
+
+const require = createRequire(import.meta.url);
+const XLSX = require("xlsx");
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const BASE_DIR = resolve(__dirname, "../../Depoimentos/depoimentos_renomeados");
+const EXCEL = resolve(__dirname, "../../Depoimentos/depoimentos_com_links.xlsx");
 const OUTPUT = resolve(__dirname, "../src/data/depoimentos.json");
 
-// Mapeamento de nomes de pasta → label legível
 const categoriaLabels = {
   Acido_Urico: "Ácido Úrico",
   Alergia: "Alergia",
@@ -73,6 +77,47 @@ const categoriaLabels = {
   Vitiligo: "Vitiligo",
 };
 
+// Normaliza string para matching: remove acentos, underscores, espaços extras, lowercase
+function normalize(str) {
+  return str
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[_\s]+/g, " ")
+    .trim();
+}
+
+// Carrega Excel e constrói índice: "categoria|nome" -> driveId
+const wb = XLSX.readFile(EXCEL);
+const sheet = wb.Sheets["Depoimentos + Links"];
+const excelRows = XLSX.utils.sheet_to_json(sheet, { header: 1 }).slice(1);
+
+// índice por (cat, nome) — pode ter colisões; usamos contador por cat
+const driveIndex = {};
+for (const row of excelRows) {
+  const cat = normalize((row[0] || "").toString());
+  const nome = normalize((row[1] || "").toString());
+  const driveId = (row[6] || "").toString().trim();
+  if (!driveId) continue;
+  const key = cat;
+  if (!driveIndex[key]) driveIndex[key] = [];
+  driveIndex[key].push({ nome, driveId });
+}
+
+// Counters para consumir os IDs por categoria em ordem
+const driveCounters = {};
+
+function getDriveId(condicao, nomeFromTxt) {
+  const catKey = normalize(condicao.replace(/_/g, " "));
+  const entries = driveIndex[catKey] || [];
+  if (!entries.length) return "";
+
+  const counter = driveCounters[catKey] ?? 0;
+  const entry = entries[counter] ?? entries[entries.length - 1];
+  driveCounters[catKey] = counter + 1;
+  return entry.driveId;
+}
+
 function parseTxt(filePath, condicao) {
   const raw = readFileSync(filePath, "utf-8");
   const lines = raw.split("\n");
@@ -112,15 +157,18 @@ let id = 1;
 
 for (const cat of categorias) {
   const catDir = join(BASE_DIR, cat);
-  const files = readdirSync(catDir).filter((f) => f.endsWith(".txt"));
+  const files = readdirSync(catDir).filter((f) => f.endsWith(".txt")).sort();
 
   for (const file of files) {
     const entry = parseTxt(join(catDir, file), cat);
-    depoimentos.push({ id: String(id++), ...entry });
+    const driveId = getDriveId(cat, entry.nome);
+    depoimentos.push({ id: String(id++), ...entry, driveId });
   }
 }
 
+const comVideo = depoimentos.filter((d) => d.driveId).length;
 writeFileSync(OUTPUT, JSON.stringify(depoimentos, null, 2), "utf-8");
 
 console.log(`✅ Processados ${depoimentos.length} depoimentos em ${categorias.length} categorias.`);
+console.log(`🎥 ${comVideo} depoimentos com vídeo do Drive.`);
 console.log(`📄 Arquivo gerado: ${OUTPUT}`);

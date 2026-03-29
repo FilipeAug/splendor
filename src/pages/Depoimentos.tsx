@@ -9,39 +9,8 @@ interface Depoimento {
   condicao: string;
   condicaoLabel: string;
   texto: string;
+  driveId: string;
 }
-
-// Video depoimentos em destaque (YouTube)
-const videoDepoimentos = [
-  {
-    id: "7cSFzZHcRxo",
-    nome: "Dores Musculares",
-    titulo: "50% de melhora nas dores musculares no primeiro mês",
-    condicaoLabel: "Dores / Cólicas",
-    quote: "Sofria muito com a recuperação muscular após exercícios. Em um mês, minhas dores musculares já melhoraram 50% e neste ciclo não senti cólica alguma.",
-  },
-  {
-    id: "BFN47xVGUvE",
-    nome: "Fibromialgia",
-    titulo: "As dores da fibromialgia simplesmente zeraram!",
-    condicaoLabel: "Fibromialgia",
-    quote: "Minhas dores zeraram, ganhei mais disposição e voltei a me exercitar.",
-  },
-  {
-    id: "GWAY0few6eg",
-    nome: "Disposição e Sono",
-    titulo: "Disposição melhorou absurdamente!",
-    condicaoLabel: "Insônia / Disposição",
-    quote: "Voltei a ter um sono reparador, sinto a pele e o cabelo melhores.",
-  },
-  {
-    id: "hqNBs_Mp6Ic",
-    nome: "Psoríase",
-    titulo: "Psoríase de 5 anos praticamente desapareceu",
-    condicaoLabel: "Psoríase",
-    quote: "Em 108 dias tive um resultado surpreendente. A psoríase que me incomodava há mais de 5 anos praticamente desapareceu.",
-  },
-];
 
 const depoimentos: Depoimento[] = depoimentosData as Depoimento[];
 const PER_PAGE = 12;
@@ -50,43 +19,21 @@ const categorias = Array.from(
   new Map(depoimentos.map((d) => [d.condicao, d.condicaoLabel])).entries()
 ).sort((a, b) => a[1].localeCompare(b[1]));
 
-function DepoimentoCard({ dep }: { dep: Depoimento }) {
-  const [expanded, setExpanded] = useState(false);
-  const PREVIEW_LENGTH = 280;
-  const isLong = dep.texto.length > PREVIEW_LENGTH;
+// Destaques na seção de vídeos — um por categoria representativa
+const depoimentosDestaque = [
+  depoimentos.find((d) => d.condicao === "Fibromialgia"),
+  depoimentos.find((d) => d.condicao === "Diabetes"),
+  depoimentos.find((d) => d.condicao === "Artrite_Artrose"),
+  depoimentos.find((d) => d.condicao === "Osteoporose"),
+  depoimentos.find((d) => d.condicao === "Problema_de_Pressao"),
+  depoimentos.find((d) => d.condicao === "Dor_no_Corpo"),
+].filter(Boolean) as Depoimento[];
 
-  return (
-    <div className="bg-white rounded-2xl border border-gray-100 p-5 flex flex-col gap-3 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200">
-      <div className="flex items-start justify-between gap-2">
-        <div>
-          <p className="font-bold text-gray-900 text-sm">{dep.nome}</p>
-          {dep.cidade && <p className="text-xs text-gray-400">{dep.cidade}</p>}
-        </div>
-        <span className="flex-shrink-0 text-xs font-semibold text-[#167D7F] bg-[#167D7F]/10 rounded-full px-3 py-1 text-center leading-tight">
-          {dep.condicaoLabel}
-        </span>
-      </div>
-      <div className="flex gap-0.5">
-        {[...Array(5)].map((_, i) => (
-          <Star key={i} size={12} className="fill-amber-400 text-amber-400" />
-        ))}
-      </div>
-      <p className="text-sm text-gray-600 leading-relaxed">
-        "{expanded || !isLong ? dep.texto : dep.texto.slice(0, PREVIEW_LENGTH) + "…"}"
-      </p>
-      {isLong && (
-        <button
-          onClick={() => setExpanded(!expanded)}
-          className="text-xs font-semibold text-[#167D7F] hover:underline text-left"
-        >
-          {expanded ? "Ver menos" : "Ler depoimento completo"}
-        </button>
-      )}
-    </div>
-  );
+function driveEmbedUrl(id: string) {
+  return `https://drive.google.com/file/d/${id}/preview`;
 }
 
-function VideoCard({ v }: { v: typeof videoDepoimentos[0] }) {
+function VideoCard({ dep }: { dep: Depoimento }) {
   const [playing, setPlaying] = useState(false);
 
   return (
@@ -94,44 +41,107 @@ function VideoCard({ v }: { v: typeof videoDepoimentos[0] }) {
       <div className="relative aspect-video bg-gray-900">
         {playing ? (
           <iframe
-            src={`https://www.youtube.com/embed/${v.id}?autoplay=1`}
-            title={v.titulo}
+            src={driveEmbedUrl(dep.driveId)}
+            title={`Depoimento — ${dep.nome}`}
             className="w-full h-full"
-            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allow="autoplay"
             allowFullScreen
           />
         ) : (
-          <>
-            <img
-              src={`https://img.youtube.com/vi/${v.id}/hqdefault.jpg`}
-              alt={v.titulo}
-              className="w-full h-full object-cover"
-            />
-            <div className="absolute inset-0 bg-black/30 flex items-center justify-center">
-              <button
-                onClick={() => setPlaying(true)}
-                className="w-14 h-14 rounded-full bg-white/90 hover:bg-white flex items-center justify-center transition-all hover:scale-110 shadow-lg"
-                aria-label="Reproduzir vídeo"
-              >
-                <Play size={24} className="text-[#167D7F] ml-1" fill="#167D7F" />
-              </button>
+          <div
+            className="w-full h-full flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#167D7F]/20 to-[#0e5557]/30"
+            onClick={() => setPlaying(true)}
+          >
+            {/* Ícone de play grande */}
+            <div className="w-16 h-16 rounded-full bg-white/90 hover:bg-white flex items-center justify-center shadow-lg transition-all hover:scale-110">
+              <Play size={28} className="text-[#167D7F] ml-1" fill="#167D7F" />
             </div>
+            {/* Badge categoria */}
             <div className="absolute top-3 left-3">
               <span className="bg-[#167D7F] text-white text-xs font-bold px-3 py-1 rounded-full">
-                {v.condicaoLabel}
+                {dep.condicaoLabel}
               </span>
             </div>
-          </>
+          </div>
         )}
       </div>
-      <div className="p-4 flex flex-col gap-2">
+      <div className="p-4 flex flex-col gap-2 flex-1">
         <div className="flex gap-0.5">
           {[...Array(5)].map((_, i) => (
             <Star key={i} size={12} className="fill-amber-400 text-amber-400" />
           ))}
         </div>
-        <p className="font-bold text-gray-900 text-sm leading-snug">{v.titulo}</p>
-        <p className="text-xs text-gray-500 leading-relaxed">"{v.quote}"</p>
+        <p className="font-bold text-gray-900 text-sm leading-snug">{dep.nome}</p>
+        {dep.cidade && dep.cidade !== "Não informado" && (
+          <p className="text-xs text-gray-400">{dep.cidade}</p>
+        )}
+        <p className="text-xs text-gray-500 leading-relaxed line-clamp-3 flex-1">
+          "{dep.texto.slice(0, 160)}…"
+        </p>
+      </div>
+    </div>
+  );
+}
+
+function DepoimentoCard({ dep }: { dep: Depoimento }) {
+  const [playing, setPlaying] = useState(false);
+  const [expanded, setExpanded] = useState(false);
+  const PREVIEW_LENGTH = 240;
+  const isLong = dep.texto.length > PREVIEW_LENGTH;
+
+  return (
+    <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200 flex flex-col">
+      {/* Vídeo embutido */}
+      <div className="relative aspect-video bg-gray-100">
+        {playing ? (
+          <iframe
+            src={driveEmbedUrl(dep.driveId)}
+            title={`Vídeo — ${dep.nome}`}
+            className="w-full h-full"
+            allow="autoplay"
+            allowFullScreen
+          />
+        ) : (
+          <div
+            className="w-full h-full flex items-center justify-center cursor-pointer bg-gradient-to-br from-[#167D7F]/10 to-[#3C9792]/20"
+            onClick={() => setPlaying(true)}
+          >
+            <div className="w-12 h-12 rounded-full bg-white/90 flex items-center justify-center shadow-md hover:scale-110 transition-transform">
+              <Play size={20} className="text-[#167D7F] ml-0.5" fill="#167D7F" />
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Conteúdo */}
+      <div className="p-4 flex flex-col gap-2 flex-1">
+        <div className="flex items-start justify-between gap-2">
+          <div>
+            <p className="font-bold text-gray-900 text-sm">{dep.nome}</p>
+            {dep.cidade && dep.cidade !== "Não informado" && (
+              <p className="text-xs text-gray-400">{dep.cidade}</p>
+            )}
+          </div>
+          <span className="flex-shrink-0 text-xs font-semibold text-[#167D7F] bg-[#167D7F]/10 rounded-full px-2.5 py-1 text-center leading-tight">
+            {dep.condicaoLabel}
+          </span>
+        </div>
+        <div className="flex gap-0.5">
+          {[...Array(5)].map((_, i) => (
+            <Star key={i} size={11} className="fill-amber-400 text-amber-400" />
+          ))}
+        </div>
+        <p className="text-xs text-gray-600 leading-relaxed">
+          "{expanded || !isLong ? dep.texto : dep.texto.slice(0, PREVIEW_LENGTH) + "…"}"
+        </p>
+        {isLong && (
+          <button
+            onClick={() => setExpanded(!expanded)}
+            className="text-xs font-semibold text-[#167D7F] hover:underline text-left"
+          >
+            {expanded ? "Ver menos" : "Ler mais"}
+          </button>
+        )}
       </div>
     </div>
   );
@@ -175,12 +185,12 @@ export default function Depoimentos() {
             O que mudou na vida de quem já usa
           </h1>
           <p className="text-white/70 text-lg max-w-xl mx-auto">
-            {depoimentos.length} depoimentos reais de pessoas que transformaram sua saúde com a água magnetizada e mineralizada.
+            {depoimentos.length} depoimentos em vídeo de pessoas reais — organizados por condição de saúde.
           </p>
         </div>
       </section>
 
-      {/* ── VÍDEOS ────────────────────────────── */}
+      {/* ── VÍDEOS EM DESTAQUE ── */}
       <section className="bg-white py-14 px-6">
         <div className="max-w-7xl mx-auto">
           <div className="flex items-center gap-3 mb-8">
@@ -189,23 +199,23 @@ export default function Depoimentos() {
             </div>
             <div>
               <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400">Assista</p>
-              <h2 className="text-xl font-bold text-gray-900">Depoimentos em vídeo</h2>
+              <h2 className="text-xl font-bold text-gray-900">Depoimentos em destaque</h2>
             </div>
           </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-            {videoDepoimentos.map((v) => (
-              <VideoCard key={v.id} v={v} />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {depoimentosDestaque.map((dep) => (
+              <VideoCard key={dep.id} dep={dep} />
             ))}
           </div>
         </div>
       </section>
 
-      {/* ── FILTROS POR CONDIÇÃO ──────────────── */}
+      {/* ── FILTROS ── */}
       <section className="py-10 px-6 bg-[#F3F3F1]">
         <div className="max-w-7xl mx-auto">
-          <div className="mb-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-1">Depoimentos escritos</h2>
-            <p className="text-sm text-gray-500">Filtre por condição de saúde ou busque pelo nome/texto</p>
+          <div className="mb-5">
+            <h2 className="text-xl font-bold text-gray-900 mb-1">Todos os depoimentos</h2>
+            <p className="text-sm text-gray-500">Cada card tem o vídeo e a transcrição — filtre pela condição que quiser ver</p>
           </div>
 
           {/* Search */}
@@ -213,7 +223,7 @@ export default function Depoimentos() {
             <Search size={16} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" />
             <input
               type="text"
-              placeholder="Buscar por nome, condição ou palavra-chave…"
+              placeholder="Buscar por nome, condição ou texto…"
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
               className="w-full pl-10 pr-10 py-3 rounded-2xl border border-gray-200 bg-white text-sm focus:outline-none focus:border-[#167D7F] focus:ring-2 focus:ring-[#167D7F]/20 shadow-sm"
@@ -225,61 +235,56 @@ export default function Depoimentos() {
             )}
           </div>
 
-          {/* Filtros visíveis — grid de botões grandes */}
-          <div className="mb-4">
-            <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 mb-3">
-              Filtrar por condição de saúde
-            </p>
-            <div className="flex flex-wrap gap-2">
-              {/* Botão "Todas" em destaque */}
-              <button
-                onClick={() => handleCategoria("todas")}
-                className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border-2 transition-all duration-150 ${
-                  categoriaAtiva === "todas"
-                    ? "bg-[#167D7F] text-white border-[#167D7F] shadow-md"
-                    : "bg-white text-gray-700 border-gray-200 hover:border-[#167D7F] hover:text-[#167D7F]"
-                }`}
-              >
-                Todas
-                <span className={`text-xs px-1.5 py-0.5 rounded-full ${
-                  categoriaAtiva === "todas" ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
-                }`}>
-                  {depoimentos.length}
-                </span>
-              </button>
-
-              {categorias.map(([key, label]) => {
-                const count = depoimentos.filter((d) => d.condicao === key).length;
-                const isActive = categoriaAtiva === key;
-                return (
-                  <button
-                    key={key}
-                    onClick={() => handleCategoria(key)}
-                    className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border-2 transition-all duration-150 ${
-                      isActive
-                        ? "bg-[#167D7F] text-white border-[#167D7F] shadow-md scale-[1.02]"
-                        : "bg-white text-gray-700 border-gray-200 hover:border-[#167D7F] hover:text-[#167D7F] hover:bg-[#167D7F]/5"
-                    }`}
-                  >
-                    {label}
-                    <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
-                      isActive ? "bg-white/25 text-white" : "bg-[#167D7F]/10 text-[#167D7F]"
-                    }`}>
-                      {count}
-                    </span>
-                  </button>
-                );
-              })}
-            </div>
+          {/* Filtros por condição */}
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-gray-400 mb-3">
+            Filtrar por condição
+          </p>
+          <div className="flex flex-wrap gap-2 mb-4">
+            <button
+              onClick={() => handleCategoria("todas")}
+              className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${
+                categoriaAtiva === "todas"
+                  ? "bg-[#167D7F] text-white border-[#167D7F] shadow-md"
+                  : "bg-white text-gray-700 border-gray-200 hover:border-[#167D7F] hover:text-[#167D7F]"
+              }`}
+            >
+              Todas
+              <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
+                categoriaAtiva === "todas" ? "bg-white/20 text-white" : "bg-gray-100 text-gray-500"
+              }`}>
+                {depoimentos.length}
+              </span>
+            </button>
+            {categorias.map(([key, label]) => {
+              const count = depoimentos.filter((d) => d.condicao === key).length;
+              const isActive = categoriaAtiva === key;
+              return (
+                <button
+                  key={key}
+                  onClick={() => handleCategoria(key)}
+                  className={`flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-semibold border-2 transition-all ${
+                    isActive
+                      ? "bg-[#167D7F] text-white border-[#167D7F] shadow-md scale-[1.02]"
+                      : "bg-white text-gray-700 border-gray-200 hover:border-[#167D7F] hover:text-[#167D7F] hover:bg-[#167D7F]/5"
+                  }`}
+                >
+                  {label}
+                  <span className={`text-xs px-1.5 py-0.5 rounded-full font-bold ${
+                    isActive ? "bg-white/25 text-white" : "bg-[#167D7F]/10 text-[#167D7F]"
+                  }`}>
+                    {count}
+                  </span>
+                </button>
+              );
+            })}
           </div>
 
-          {/* Resultado count */}
           {(search || categoriaAtiva !== "todas") && (
-            <div className="flex items-center gap-3 mt-2">
+            <div className="flex items-center gap-3">
               <p className="text-sm text-gray-500">
                 <span className="font-bold text-[#167D7F]">{filtered.length}</span> resultado{filtered.length !== 1 ? "s" : ""}
                 {categoriaAtiva !== "todas" && (
-                  <span> em <span className="font-semibold">{categorias.find(([k]) => k === categoriaAtiva)?.[1]}</span></span>
+                  <> em <span className="font-semibold">{categorias.find(([k]) => k === categoriaAtiva)?.[1]}</span></>
                 )}
               </p>
               <button
@@ -293,7 +298,7 @@ export default function Depoimentos() {
         </div>
       </section>
 
-      {/* ── GRID DE DEPOIMENTOS ──────────────── */}
+      {/* ── GRID ── */}
       <section className="pb-16 px-6">
         <div className="max-w-7xl mx-auto">
           {paginated.length > 0 ? (
@@ -356,7 +361,7 @@ export default function Depoimentos() {
       {/* CTA */}
       <section className="bg-white py-14 text-center px-6 border-t border-gray-100">
         <div className="max-w-xl mx-auto">
-          <h3 className="text-2xl font-bold text-gray-900 mb-3">Quer ser o próximo depoimento?</h3>
+          <h3 className="text-2xl font-bold text-gray-900 mb-3">Quer ser o próximo?</h3>
           <p className="text-gray-500 mb-8">Experimente o Sylocimol + Top H+ e transforme a qualidade da sua água.</p>
           <a href="/#produtos" className="cta-button">Ver combos disponíveis</a>
         </div>
