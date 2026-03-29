@@ -50,9 +50,9 @@ export function Footer() {
             </p>
             {[
               { label: "Início", href: "/" },
-              { label: "Depoimentos", href: "/depoimentos" },
+              { label: "Resultados", href: "/resultados" },
               { label: "Estudos Científicos", href: "/estudos" },
-              { label: "Blog / Novidades", href: "/blog" },
+              { label: "Novidades", href: "/novidades" },
             ].map((link) => (
               <Link
                 key={link.href}

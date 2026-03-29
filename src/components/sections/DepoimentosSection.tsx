@@ -210,10 +210,10 @@ export function DepoimentosSection({ onCTAClick }: DepoimentosSectionProps) {
             QUERO TRANSFORMAR MINHA SAÚDE TAMBÉM
           </CTAButton>
           <Link
-            to="/depoimentos"
+            to="/resultados"
             className="inline-flex items-center gap-2 text-sm font-semibold text-[#167D7F] hover:underline"
           >
-            Ver todos os depoimentos
+            Ver todos os resultados
             <ArrowRight size={16} />
           </Link>
         </div>

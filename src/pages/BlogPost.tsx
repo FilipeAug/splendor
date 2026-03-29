@@ -23,7 +23,7 @@ export default function BlogPost() {
         <h1 className="text-3xl font-bold text-gray-900">Post não encontrado</h1>
         <p className="text-gray-500">Este artigo não existe ou foi removido.</p>
         <Link
-          to="/blog"
+          to="/novidades"
           className="inline-flex items-center gap-2 text-[#167D7F] font-semibold hover:underline"
         >
           <ArrowLeft size={16} />
@@ -41,7 +41,7 @@ export default function BlogPost() {
       <section className="hero-gradient pt-16 pb-12 px-6">
         <div className="max-w-3xl mx-auto">
           <Link
-            to="/blog"
+            to="/novidades"
             className="inline-flex items-center gap-2 text-white/70 hover:text-white text-sm mb-8 transition-colors"
           >
             <ArrowLeft size={16} />
@@ -117,7 +117,7 @@ export default function BlogPost() {
             {outros.map((p) => (
               <Link
                 key={p.slug}
-                to={`/blog/${p.slug}`}
+                to={`/novidades/${p.slug}`}
                 className="group card-elevated flex flex-col gap-3"
               >
                 <span className="text-xs font-semibold text-[#167D7F]">

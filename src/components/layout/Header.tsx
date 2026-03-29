@@ -4,9 +4,9 @@ import { Menu, X, Droplets } from "lucide-react";
 
 const navLinks = [
   { label: "Início", href: "/" },
-  { label: "Depoimentos", href: "/depoimentos" },
+  { label: "Resultados", href: "/resultados" },
   { label: "Estudos", href: "/estudos" },
-  { label: "Blog", href: "/blog" },
+  { label: "Novidades", href: "/novidades" },
 ];
 
 export function Header() {

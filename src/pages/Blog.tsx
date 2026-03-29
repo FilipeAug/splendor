@@ -77,7 +77,7 @@ export default function Blog() {
               Mais recente
             </p>
             <Link
-              to={`/blog/${postDestaque.slug}`}
+              to={`/novidades/${postDestaque.slug}`}
               className="group block bg-[#F3F3F1] rounded-3xl overflow-hidden hover:shadow-medium transition-shadow"
             >
               <div className="p-8 md:p-12 flex flex-col md:flex-row gap-8 items-start">
@@ -123,7 +123,7 @@ export default function Blog() {
               {demais.map((post) => (
                 <Link
                   key={post.slug}
-                  to={`/blog/${post.slug}`}
+                  to={`/novidades/${post.slug}`}
                   className="group card-elevated flex flex-col gap-4 hover:border-[#167D7F]/30 transition-colors"
                 >
                   <span
