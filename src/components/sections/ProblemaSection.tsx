@@ -29,7 +29,8 @@ export function ProblemaSection() {
           </h2>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-8 lg:gap-20 items-start">
+        {/* Linha superior: texto + GIF lado a lado */}
+        <div className="grid lg:grid-cols-2 gap-8 lg:gap-20 items-center mb-8 lg:mb-12">
           {/* Copy */}
           <div className="space-y-5 text-gray-600 text-[1.0625rem] leading-relaxed">
             <p>
@@ -61,46 +62,43 @@ export function ProblemaSection() {
             </p>
           </div>
 
-          {/* Visual side */}
-          <div className="space-y-6">
-            {/* Cluster GIF — maior no mobile */}
-            <div className="bg-gradient-to-br from-gray-50 to-blue-50/50 rounded-3xl p-5 sm:p-8 flex flex-col items-center">
-              <div className="w-full max-w-[320px] sm:max-w-none mx-auto aspect-square sm:w-72 sm:h-72 md:w-80 md:h-80 overflow-hidden rounded-2xl flex items-center justify-center shadow-md mb-4">
-                <img
-                  src={aguaClusterGif}
-                  alt="Moléculas de água agrupadas em clusters — dificultam absorção celular"
-                  loading="lazy"
-                  decoding="async"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-              <p className="text-sm text-gray-500 text-center font-medium">
-                Moléculas agrupadas (clusters) que não passam pela membrana celular
-              </p>
+          {/* GIF */}
+          <div className="bg-gradient-to-br from-gray-50 to-blue-50/50 rounded-3xl p-5 sm:p-8 flex flex-col items-center">
+            <div className="w-full max-w-[320px] sm:max-w-none mx-auto aspect-square sm:w-72 sm:h-72 md:w-80 md:h-80 lg:w-full lg:h-auto lg:aspect-square overflow-hidden rounded-2xl flex items-center justify-center shadow-md mb-4">
+              <img
+                src={aguaClusterGif}
+                alt="Moléculas de água agrupadas em clusters — dificultam absorção celular"
+                loading="lazy"
+                decoding="async"
+                className="w-full h-full object-cover"
+              />
             </div>
+            <p className="text-sm text-gray-500 text-center font-medium">
+              Moléculas agrupadas (clusters) que não passam pela membrana celular
+            </p>
+          </div>
+        </div>
 
-            {/* Warning signs */}
-            <div className="card-elevated">
-              <h3 className="text-lg font-bold text-gray-900 mb-5 flex items-center gap-2">
-                <span className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center">
-                  <AlertTriangle className="h-4 w-4 text-amber-600" />
-                </span>
-                Você reconhece algum desses sinais?
-              </h3>
-              <ul className="space-y-3.5">
-                {sinaisAlerta.map((sinal, i) => (
-                  <li key={i} className="flex items-start gap-3">
-                    <span className="w-2 h-2 rounded-full bg-amber-400 mt-2.5 flex-shrink-0" />
-                    <span className="text-gray-600">{sinal}</span>
-                  </li>
-                ))}
-              </ul>
-              <div className="mt-6 bg-amber-50 rounded-xl p-4">
-                <p className="text-sm font-semibold text-amber-800">
-                  Esses podem ser sinais de que sua água não está chegando onde precisa.
-                </p>
-              </div>
-            </div>
+        {/* Card de sinais — largura total no desktop */}
+        <div className="card-elevated">
+          <h3 className="text-lg font-bold text-gray-900 mb-6 flex items-center gap-2">
+            <span className="w-8 h-8 bg-amber-100 rounded-lg flex items-center justify-center flex-shrink-0">
+              <AlertTriangle className="h-4 w-4 text-amber-600" />
+            </span>
+            Você reconhece algum desses sinais?
+          </h3>
+          <ul className="grid sm:grid-cols-2 lg:grid-cols-3 gap-x-8 gap-y-3.5 mb-6">
+            {sinaisAlerta.map((sinal, i) => (
+              <li key={i} className="flex items-start gap-3">
+                <span className="w-2 h-2 rounded-full bg-amber-400 mt-2.5 flex-shrink-0" />
+                <span className="text-gray-600">{sinal}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="bg-amber-50 rounded-xl p-4">
+            <p className="text-sm font-semibold text-amber-800">
+              Esses podem ser sinais de que sua água não está chegando onde precisa.
+            </p>
           </div>
         </div>
       </div>
