@@ -2,6 +2,8 @@ import { useParams, Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { ArrowLeft, Clock, Calendar, Tag } from "lucide-react";
 import { getPostBySlug, posts } from "@/data/blog";
+import { usePageSEO } from "@/hooks/usePageSEO";
+import { BlogPostSchema } from "@/components/BlogPostSchema";
 
 function formatDate(dateStr: string) {
   if (!dateStr) return "";
@@ -16,6 +18,14 @@ function formatDate(dateStr: string) {
 export default function BlogPost() {
   const { slug } = useParams<{ slug: string }>();
   const post = getPostBySlug(slug ?? "");
+
+  usePageSEO({
+    title: post?.title ?? "Post não encontrado",
+    description: post?.excerpt ?? "Este artigo não existe ou foi removido.",
+    canonical: post ? `/novidades/${post.slug}` : "/novidades",
+    ogType: "article",
+    keywords: post?.keywords,
+  });
 
   if (!post) {
     return (
@@ -37,6 +47,13 @@ export default function BlogPost() {
 
   return (
     <div className="min-h-screen bg-white">
+      <BlogPostSchema
+        title={post.title}
+        description={post.excerpt}
+        date={post.date}
+        slug={post.slug}
+        tempoLeitura={post.tempoLeitura}
+      />
       {/* Header do post */}
       <section className="hero-gradient pt-16 pb-12 px-6">
         <div className="max-w-3xl mx-auto">

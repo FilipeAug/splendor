@@ -5,6 +5,7 @@ slug: "agua-magnetizada-e-osteoporose"
 excerpt: "Um estudo publicado no Journal of Clinical Densitometry encontrou resultados surpreendentes sobre a relação entre minerais na água e a densidade mineral óssea. Entenda o que a ciência diz."
 categoria: "Pesquisa"
 tempoLeitura: "5 min"
+keywords: "água magnetizada osteoporose, sylocimol osteoporose, cálcio na água, densidade óssea, top h+ ossos, minerais água saúde óssea"
 ---
 
 ## Por que os ossos precisam de água?

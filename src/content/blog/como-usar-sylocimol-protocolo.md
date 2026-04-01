@@ -5,6 +5,7 @@ slug: "como-usar-sylocimol-protocolo"
 excerpt: "Posicionamento, tempo de espera, quantidade diária e cuidados com a manutenção. Tudo que você precisa saber para aproveitar ao máximo a água magnetizada e mineralizada."
 categoria: "Uso"
 tempoLeitura: "6 min"
+keywords: "como usar sylocimol, protocolo sylocimol, sylocimol como funciona, como usar top h+, água magnetizada como fazer, sylocimol instruções"
 ---
 
 ## Por que o protocolo importa

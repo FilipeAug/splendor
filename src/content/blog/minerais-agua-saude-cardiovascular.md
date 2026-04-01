@@ -5,6 +5,7 @@ slug: "minerais-agua-saude-cardiovascular"
 excerpt: "Estudos na Finlândia mostraram redução de até 25% em problemas cardíacos em populações com ingestão adequada de magnésio. O problema? A maioria das pessoas não ingere o suficiente — e a água pode mudar isso."
 categoria: "Saúde"
 tempoLeitura: "4 min"
+keywords: "magnésio na água, sylocimol coração, saúde cardiovascular, água magnetizada pressão, top h+ magnésio, minerais água coração"
 ---
 
 ## O magnésio que o Brasil não coloca na água

@@ -5,6 +5,7 @@ export interface PostMeta {
   excerpt: string;
   categoria: string;
   tempoLeitura: string;
+  keywords?: string;
 }
 
 export interface Post extends PostMeta {
@@ -50,6 +51,7 @@ function parsePost(raw: string, slug: string): Post {
     excerpt: data.excerpt ?? "",
     categoria: data.categoria ?? "Geral",
     tempoLeitura: data.tempoLeitura ?? "3 min",
+    keywords: data.keywords ?? undefined,
     content,
   };
 }

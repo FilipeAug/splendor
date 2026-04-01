@@ -2,6 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { Clock, Tag, ArrowRight, BookOpen } from "lucide-react";
 import { posts, categorias } from "@/data/blog";
+import { usePageSEO } from "@/hooks/usePageSEO";
 
 function formatDate(dateStr: string) {
   if (!dateStr) return "";
@@ -21,6 +22,13 @@ const categoriaColors: Record<string, string> = {
 };
 
 export default function Blog() {
+  usePageSEO({
+    title: "Blog — Artigos sobre Sylocimol, Água Magnetizada e Saúde",
+    description: "Conteúdo científico e educativo sobre Sylocimol, Top H+, água magnetizada e seus benefícios para a saúde. Estudos, depoimentos e guias de uso.",
+    canonical: "/novidades",
+    keywords: "sylocimol, blog sylocimol, água magnetizada, top h+, saúde, magnetizador de água",
+  });
+
   const [catAtiva, setCatAtiva] = useState<string>("Todas");
 
   const filteredPosts =
