@@ -1,3 +1,4 @@
+import { usePageSEO } from "@/hooks/usePageSEO";
 import { HeroSection } from "@/components/sections/HeroSection";
 import { ProvaRapidaSection } from "@/components/sections/ProvaRapidaSection";
 import { ProblemaSection } from "@/components/sections/ProblemaSection";
@@ -15,6 +16,13 @@ const scrollToProdutos = () => {
 };
 
 const Index = () => {
+  usePageSEO({
+    title: "Transforme sua Água em Fonte de Saúde",
+    description: "Descubra como a tecnologia exclusiva do Sylocimol e Top H+ pode tornar sua água mais leve, hidratante e benéfica para todo o organismo. Dispensado de registro ANVISA.",
+    canonical: "/",
+    keywords: "sylocimol, top h+, água magnetizada, magnetizador de água, água saudável, saúde",
+  });
+
   return (
     <main className="min-h-screen">
       {/* 1. Hero */}

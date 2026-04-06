@@ -1,5 +1,6 @@
 import { useState, useMemo } from "react";
 import { Search, ChevronLeft, ChevronRight, Star, X, Play } from "lucide-react";
+import { usePageSEO } from "@/hooks/usePageSEO";
 import depoimentosData from "@/data/depoimentos.json";
 
 interface Depoimento {
@@ -155,6 +156,13 @@ function DepoimentoCard({ dep }: { dep: Depoimento }) {
 }
 
 export default function Depoimentos() {
+  usePageSEO({
+    title: "Depoimentos Reais — Resultados com Sylocimol e Top H+",
+    description: "Mais de 200 depoimentos em vídeo de pessoas que relatam melhorias na saúde com Sylocimol e Top H+. Veja os resultados reais.",
+    canonical: "/resultados",
+    keywords: "sylocimol depoimentos, sylocimol resultados, sylocimol funciona, água magnetizada resultados, sylocimol antes e depois",
+  });
+
   const [search, setSearch] = useState("");
   const [categoriaAtiva, setCategoriaAtiva] = useState<string>("todas");
   const [page, setPage] = useState(1);

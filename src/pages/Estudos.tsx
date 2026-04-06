@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { FileText, ImageIcon, Award, BookOpen, ExternalLink, Star } from "lucide-react";
+import { usePageSEO } from "@/hooks/usePageSEO";
 import { estudos, tipoLabels, tipoColors, type TipoEstudo, type Estudo } from "@/data/estudos";
 
 const filtros: { label: string; value: "todas" | TipoEstudo }[] = [
@@ -76,6 +77,13 @@ function EstudoCard({ estudo }: { estudo: Estudo }) {
 }
 
 export default function Estudos() {
+  usePageSEO({
+    title: "Estudos Científicos — Sylocimol e Água Magnetizada",
+    description: "Laudos técnicos, estudos da APTA, publicações internacionais e reconhecimentos que comprovam a eficácia da tecnologia Sylocimol e Top H+.",
+    canonical: "/estudos",
+    keywords: "sylocimol estudos, água magnetizada ciência, sylocimol comprovação, sylocimol ANVISA, laudos sylocimol",
+  });
+
   const [filtroAtivo, setFiltroAtivo] = useState<"todas" | TipoEstudo>("todas");
   const [apenasDest, setApenasDest] = useState(false);
 
